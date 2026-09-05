@@ -25,6 +25,14 @@ os.environ.setdefault("FOVI_DATASETS_DIR", os.path.join(os.path.dirname(os.path.
 
 import fovi
 try:
+    import fovi.adapter
+    import fovi.models
+    import fovi.sampling
+    import fovi.geometry
+except Exception:
+    pass
+
+try:
     from fovi.sampling import random_fixations
 except (ImportError, AttributeError):
     try:

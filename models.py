@@ -18,6 +18,14 @@ os.environ.setdefault("FOVI_SAVE_DIR", os.path.join(os.path.dirname(os.path.absp
 os.environ.setdefault("FOVI_DATASETS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
 
 import fovi
+try:
+    import fovi.adapter
+except Exception:
+    pass
+try:
+    import fovi.models
+except Exception:
+    pass
 
 
 class LoRALinear(nn.Module):
@@ -152,15 +160,27 @@ def build_fovi_vit_lora(
     - LoRA adaptation applied to layers 0-5
     - 100-class classification head (trainable)
     """
-    base_model = timm.create_model(model_name, pretrained=pretrained, num_classes=num_classes)
-    
-    # Check if FOVIAdapter is available in fovi or fovi.adapter
-    FOVIAdapterClass = getattr(fovi, "FOVIAdapter", None)
-    if FOVIAdapterClass is None and hasattr(fovi, "adapter"):
-        FOVIAdapterClass = getattr(fovi.adapter, "FOVIAdapter", None)
+    # Robust resolution of FOVIAdapter across any Python/FOVI environment
+    FOVIAdapterClass = None
+    if hasattr(fovi, "adapter") and hasattr(fovi.adapter, "FOVIAdapter"):
+        FOVIAdapterClass = fovi.adapter.FOVIAdapter
+    elif hasattr(fovi, "FOVIAdapter"):
+        FOVIAdapterClass = fovi.FOVIAdapter
+    else:
+        try:
+            from fovi.adapter import FOVIAdapter
+            FOVIAdapterClass = FOVIAdapter
+        except Exception:
+            try:
+                from fovi import FOVIAdapter
+                FOVIAdapterClass = FOVIAdapter
+            except Exception:
+                pass
 
     if FOVIAdapterClass is None:
-        raise ImportError("Could not find FOVIAdapter in fovi module.")
+        raise ImportError("Could not find FOVIAdapter in fovi or fovi.adapter module.")
+
+    base_model = timm.create_model(model_name, pretrained=pretrained, num_classes=num_classes)
 
     try:
         fovi_model = FOVIAdapterClass(
