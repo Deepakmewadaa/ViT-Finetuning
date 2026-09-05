@@ -1,0 +1,29 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch Checkpoints & Models
+checkpoints/
+*.pt
+*.pth
+*.bin
+*.onnx
+
+# Data & Manifests
+dataset_splits.json
+final_summary.json
+flops_comparison.json
+*.png
+*.jpg
+*.jpeg
+*.log
+
+# Environments & IDEs
+.venv/
+venv/
+ENV/
+.idea/
+.vscode/
+*.swp
+.DS_Store
