@@ -19,7 +19,18 @@ import torch.nn as nn
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+# Auto-set FOVI environment variables before importing fovi if not already set
+os.environ.setdefault("FOVI_SAVE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "checkpoints"))
+os.environ.setdefault("FOVI_DATASETS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+
 import fovi
+try:
+    from fovi.sampling import random_fixations
+except (ImportError, AttributeError):
+    try:
+        from fovi.geometry import random_fixations
+    except (ImportError, AttributeError):
+        random_fixations = getattr(fovi, "random_fixations", None)
 
 from dataset import get_dataloaders
 from models import get_model, count_parameters
@@ -70,7 +81,7 @@ def compute_test_metrics(model, test_loader, device, model_name: str = "Model", 
 
             with torch.amp.autocast('cuda', dtype=torch.float16):
                 if is_fovi and num_fixations > 1:
-                    fixations = fovi.random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
+                    fixations = random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
                     outputs = model(images, fixations=fixations)
                 else:
                     outputs = model(images)

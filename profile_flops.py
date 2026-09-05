@@ -12,6 +12,11 @@ import json
 import time
 import torch
 from tabulate import tabulate
+
+# Auto-set FOVI environment variables before importing fovi if not already set
+os.environ.setdefault("FOVI_SAVE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "checkpoints"))
+os.environ.setdefault("FOVI_DATASETS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+
 import fovi
 from fvcore.nn import FlopCountAnalysis
 

@@ -3,10 +3,25 @@ Model definitions for Baseline Tiny ViT vs. FOVI Tiny ViT with LoRA.
 Supports pre-trained ViT-Tiny (DeiT-Tiny) backbones.
 """
 
+import os
 import torch
 import torch.nn as nn
 import timm
+
+# Auto-set FOVI environment variables before importing fovi if not already set
+os.environ.setdefault("FOVI_SAVE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "checkpoints"))
+os.environ.setdefault("FOVI_DATASETS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+
 import fovi
+try:
+    from fovi.adapter import apply_fovi_lora_to_vit, FOVIAdapter
+except (ImportError, AttributeError):
+    try:
+        from fovi.lora import apply_fovi_lora_to_vit
+        from fovi.adapter import FOVIAdapter
+    except (ImportError, AttributeError):
+        apply_fovi_lora_to_vit = getattr(fovi, "apply_fovi_lora_to_vit", None)
+        FOVIAdapter = getattr(fovi, "FOVIAdapter", None)
 
 
 def count_parameters(model: nn.Module) -> dict:
@@ -55,13 +70,16 @@ def build_baseline_vit_lora(
             param.requires_grad = True
 
     # 4. Apply LoRA adaptation to early layers
-    fovi.apply_fovi_lora_to_vit(
-        model,
-        num_early_layers=num_early_layers,
-        rank=rank,
-        alpha=alpha,
-        dropout=0.0
-    )
+    if apply_fovi_lora_to_vit is not None:
+        apply_fovi_lora_to_vit(
+            model,
+            num_early_layers=num_early_layers,
+            rank=rank,
+            alpha=alpha,
+            dropout=0.0
+        )
+    else:
+        raise ImportError("Could not find apply_fovi_lora_to_vit in fovi, fovi.adapter, or fovi.lora")
 
     return model
 
@@ -76,16 +94,19 @@ def build_fovi_vit_lora(
 ) -> nn.Module:
     """
     Builds FOVI-adapted Tiny ViT with:
-    - Pretrained timm backbone wrapped in fovi.FOVIAdapter
+    - Pretrained timm backbone wrapped in FOVIAdapter
     - Foveated retinal patchification (KNN-convolution on sensor manifold)
     - Early-layer LoRA adaptation applied
     - 100-class classification head (trainable)
     """
+    if FOVIAdapter is None:
+        raise ImportError("Could not find FOVIAdapter in fovi or fovi.adapter")
+
     # 1. Instantiate base timm model
     base_model = timm.create_model(model_name, pretrained=pretrained, num_classes=num_classes)
 
     # 2. Wrap with FOVIAdapter
-    fovi_model = fovi.FOVIAdapter(
+    fovi_model = FOVIAdapter(
         base_model,
         apply_lora=True,
         num_lora_layers=num_early_layers,

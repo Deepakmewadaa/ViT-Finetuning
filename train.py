@@ -20,7 +20,18 @@ import torch.nn as nn
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, SequentialLR
 from tqdm import tqdm
+# Auto-set FOVI environment variables before importing fovi if not already set
+os.environ.setdefault("FOVI_SAVE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "checkpoints"))
+os.environ.setdefault("FOVI_DATASETS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+
 import fovi
+try:
+    from fovi.sampling import random_fixations
+except (ImportError, AttributeError):
+    try:
+        from fovi.geometry import random_fixations
+    except (ImportError, AttributeError):
+        random_fixations = getattr(fovi, "random_fixations", None)
 
 from dataset import get_dataloaders
 from models import get_model, count_parameters
@@ -88,7 +99,7 @@ def train_one_epoch(
         with torch.amp.autocast('cuda', dtype=torch.float16):
             if is_fovi and num_fixations > 1:
                 # Sample random fixations within central radius 0.25 (as in paper Section 5.2 & 6.2)
-                fixations = fovi.random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
+                fixations = random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
                 outputs = model(images, fixations=fixations)
             else:
                 outputs = model(images)
@@ -139,7 +150,7 @@ def evaluate(model, loader, criterion, device, epoch: int, total_epochs: int, is
 
             with torch.amp.autocast('cuda', dtype=torch.float16):
                 if is_fovi and num_fixations > 1:
-                    fixations = fovi.random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
+                    fixations = random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
                     outputs = model(images, fixations=fixations)
                 else:
                     outputs = model(images)
