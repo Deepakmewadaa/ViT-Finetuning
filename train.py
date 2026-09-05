@@ -226,10 +226,13 @@ def train_model(
     trainable_params = [p for p in model.parameters() if p.requires_grad]
     optimizer = AdamW(trainable_params, lr=lr, weight_decay=weight_decay)
 
-    warmup_epochs = min(2, max(1, epochs // 5))
-    warmup_sched = LinearLR(optimizer, start_factor=0.1, total_iters=warmup_epochs)
-    cosine_sched = CosineAnnealingLR(optimizer, T_max=epochs - warmup_epochs, eta_min=1e-6)
-    scheduler = SequentialLR(optimizer, schedulers=[warmup_sched, cosine_sched], milestones=[warmup_epochs])
+    if epochs <= 2:
+        scheduler = CosineAnnealingLR(optimizer, T_max=max(1, epochs), eta_min=1e-6)
+    else:
+        warmup_epochs = min(2, max(1, epochs // 5))
+        warmup_sched = LinearLR(optimizer, start_factor=0.1, total_iters=warmup_epochs)
+        cosine_sched = CosineAnnealingLR(optimizer, T_max=max(1, epochs - warmup_epochs), eta_min=1e-6)
+        scheduler = SequentialLR(optimizer, schedulers=[warmup_sched, cosine_sched], milestones=[warmup_epochs])
 
     criterion = nn.CrossEntropyLoss(label_smoothing=0.05)
     scaler = torch.amp.GradScaler('cuda')
