@@ -32,16 +32,8 @@ try:
 except Exception:
     pass
 
-try:
-    from fovi.sampling import random_fixations
-except (ImportError, AttributeError):
-    try:
-        from fovi.geometry import random_fixations
-    except (ImportError, AttributeError):
-        random_fixations = getattr(fovi, "random_fixations", None)
-
 from dataset import get_dataloaders
-from models import get_model, count_parameters
+from models import get_model, count_parameters, sample_random_fixations
 from profile_flops import profile_model_flops_and_latency
 
 
@@ -89,7 +81,7 @@ def compute_test_metrics(model, test_loader, device, model_name: str = "Model", 
 
             with torch.amp.autocast('cuda', dtype=torch.float16):
                 if is_fovi and num_fixations > 1:
-                    fixations = random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
+                    fixations = sample_random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
                     outputs = model(images, fixations=fixations)
                 else:
                     outputs = model(images)

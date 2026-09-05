@@ -33,16 +33,8 @@ try:
 except Exception:
     pass
 
-try:
-    from fovi.sampling import random_fixations
-except (ImportError, AttributeError):
-    try:
-        from fovi.geometry import random_fixations
-    except (ImportError, AttributeError):
-        random_fixations = getattr(fovi, "random_fixations", None)
-
 from dataset import get_dataloaders
-from models import get_model, count_parameters
+from models import get_model, count_parameters, sample_random_fixations
 
 
 def setup_logger(log_file: str) -> logging.Logger:
@@ -107,7 +99,7 @@ def train_one_epoch(
         with torch.amp.autocast('cuda', dtype=torch.float16):
             if is_fovi and num_fixations > 1:
                 # Sample random fixations within central radius 0.25 (as in paper Section 5.2 & 6.2)
-                fixations = random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
+                fixations = sample_random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
                 outputs = model(images, fixations=fixations)
             else:
                 outputs = model(images)
@@ -158,7 +150,7 @@ def evaluate(model, loader, criterion, device, epoch: int, total_epochs: int, is
 
             with torch.amp.autocast('cuda', dtype=torch.float16):
                 if is_fovi and num_fixations > 1:
-                    fixations = random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
+                    fixations = sample_random_fixations(batch_size, num_fixations=num_fixations, radius=0.25, device=device)
                     outputs = model(images, fixations=fixations)
                 else:
                     outputs = model(images)
@@ -333,7 +325,7 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, default="baseline", choices=["baseline", "fovi", "all"], help="Model architecture")
     parser.add_argument("--epochs", type=int, default=50, help="Number of training epochs")
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size")
-    parser.add_argument("--lr", type=float, default=3e-4, help="Learning rate")
+    parser.add_argument("--lr", type=float, default=5e-4, help="Learning rate")
     parser.add_argument("--weight_decay", type=float, default=0.01, help="Weight decay")
     parser.add_argument("--num_workers", type=int, default=2, help="Number of data loader workers")
     parser.add_argument("--fixations_train", type=int, default=4, help="Number of random fixations per training image for FOVI")
