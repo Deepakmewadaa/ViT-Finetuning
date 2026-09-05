@@ -173,9 +173,12 @@ def train_model(
     weight_decay: float = 0.01,
     num_workers: int = 2,
     num_fixations_train: int = 4,
-    data_dir: str = r"C:\Users\deepa\Downloads\train\train",
-    save_dir: str = r"d:\Research\checkpoints"
+    data_dir: str = None,
+    save_dir: str = None
 ):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = data_dir or os.path.join(base_dir, "data", "train")
+    save_dir = save_dir or os.path.join(base_dir, "checkpoints")
     os.makedirs(save_dir, exist_ok=True)
     log_file = os.path.join(save_dir, f"train_{model_type}.log")
     logger = setup_logger(log_file)
@@ -312,8 +315,12 @@ if __name__ == "__main__":
     parser.add_argument("--weight_decay", type=float, default=0.01, help="Weight decay")
     parser.add_argument("--num_workers", type=int, default=2, help="Number of data loader workers")
     parser.add_argument("--fixations_train", type=int, default=4, help="Number of random fixations per training image for FOVI")
-    parser.add_argument("--data_dir", type=str, default=r"C:\Users\deepa\Downloads\train\train", help="Dataset directory")
-    parser.add_argument("--save_dir", type=str, default=r"d:\Research\checkpoints", help="Output directory")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    default_data_dir = os.environ.get("DATA_DIR", os.path.join(base_dir, "data", "train"))
+    default_save_dir = os.path.join(base_dir, "checkpoints")
+
+    parser.add_argument("--data_dir", type=str, default=default_data_dir, help="Dataset directory")
+    parser.add_argument("--save_dir", type=str, default=default_save_dir, help="Output directory")
 
     args = parser.parse_args()
 

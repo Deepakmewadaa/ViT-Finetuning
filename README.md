@@ -47,17 +47,17 @@ python profile_flops.py
 
 ### 2. Train Models (Baseline & FOVI)
 ```bash
-# Train both models sequentially (e.g. 50 epochs)
-python train.py --model all --epochs 50 --batch_size 64 --lr 5e-4
+# Train both models sequentially (specifying your dataset path if different from ./data/train)
+python train.py --data_dir "/path/to/train_dataset" --model all --epochs 50 --batch_size 64 --lr 5e-4
 
 # Or train individually:
-python train.py --model baseline --epochs 50 --batch_size 64 --lr 5e-4
-python train.py --model fovi --epochs 50 --batch_size 64 --lr 5e-4
+python train.py --data_dir "/path/to/train_dataset" --model baseline --epochs 50 --batch_size 64 --lr 5e-4
+python train.py --data_dir "/path/to/train_dataset" --model fovi --epochs 50 --batch_size 64 --lr 5e-4
 ```
 
 ### 3. Evaluate on Held-Out Test Set (Table 1 Protocol)
 ```bash
-python evaluate_and_compare.py
+python evaluate_and_compare.py --data_dir "/path/to/train_dataset"
 ```
 
 ---

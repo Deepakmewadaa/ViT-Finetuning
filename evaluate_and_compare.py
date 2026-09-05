@@ -104,7 +104,7 @@ def compute_test_metrics(model, test_loader, device, model_name: str = "Model", 
     }
 
 
-def plot_comparison_and_history(save_dir: str = r"d:\Research\checkpoints", output_plot: str = r"d:\Research\comparison_results.png"):
+def plot_comparison_and_history(save_dir: str = "checkpoints", output_plot: str = "comparison_results.png"):
     base_hist_path = os.path.join(save_dir, "history_baseline.json")
     fovi_hist_path = os.path.join(save_dir, "history_fovi.json")
 
@@ -160,10 +160,15 @@ def plot_comparison_and_history(save_dir: str = r"d:\Research\checkpoints", outp
 
 
 def run_evaluation(
-    data_dir: str = r"C:\Users\deepa\Downloads\train\train",
-    save_dir: str = r"d:\Research\checkpoints",
-    output_summary_json: str = r"d:\Research\final_summary.json"
+    data_dir: str = None,
+    save_dir: str = None,
+    output_summary_json: str = None
 ):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = data_dir or os.path.join(base_dir, "data", "train")
+    save_dir = save_dir or os.path.join(base_dir, "checkpoints")
+    output_summary_json = output_summary_json or os.path.join(base_dir, "final_summary.json")
+
     log_file = os.path.join(save_dir, "evaluation.log")
     logger = setup_logger(log_file)
 
@@ -258,8 +263,12 @@ def run_evaluation(
 
 
 if __name__ == "__main__":
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    default_data_dir = os.environ.get("DATA_DIR", os.path.join(base_dir, "data", "train"))
+    default_save_dir = os.path.join(base_dir, "checkpoints")
+
     parser = argparse.ArgumentParser(description="Evaluate best checkpoints on held-out test set")
-    parser.add_argument("--data_dir", type=str, default=r"C:\Users\deepa\Downloads\train\train")
-    parser.add_argument("--save_dir", type=str, default=r"d:\Research\checkpoints")
+    parser.add_argument("--data_dir", type=str, default=default_data_dir, help="Dataset directory")
+    parser.add_argument("--save_dir", type=str, default=default_save_dir, help="Checkpoints directory")
     args = parser.parse_args()
     run_evaluation(data_dir=args.data_dir, save_dir=args.save_dir)

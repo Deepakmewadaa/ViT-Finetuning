@@ -105,7 +105,7 @@ def profile_model_flops_and_latency(
     }
 
 
-def run_benchmark_comparison(output_json: str = r"d:\Research\flops_comparison.json"):
+def run_benchmark_comparison(output_json: str = "flops_comparison.json"):
     results = []
     for m in ["baseline", "fovi"]:
         res = profile_model_flops_and_latency(m)

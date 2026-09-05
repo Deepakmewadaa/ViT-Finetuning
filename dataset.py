@@ -18,8 +18,9 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
 
-DEFAULT_DATA_DIR = r"C:\Users\deepa\Downloads\train\train"
-SPLIT_CACHE_PATH = r"d:\Research\dataset_splits.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_DATA_DIR = os.path.join(BASE_DIR, "data", "train")
+SPLIT_CACHE_PATH = os.path.join(BASE_DIR, "dataset_splits.json")
 
 # Standard ImageNet normalization for ViTs
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
