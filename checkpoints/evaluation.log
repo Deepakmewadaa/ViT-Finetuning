@@ -1,0 +1,46 @@
+[2026-09-05 18:52:40] ===============================================================================================
+[2026-09-05 18:52:40]         FINAL EVALUATION ON HELD-OUT TEST SET (5,000 IMAGES - ICML PAPER PROTOCOL)
+[2026-09-05 18:52:40] Device: cuda (NVIDIA GeForce RTX 5060 Laptop GPU)
+[2026-09-05 18:52:40] Log File: /home/anshu/deepak/ViT-Finetuning/checkpoints/evaluation.log
+[2026-09-05 18:52:40] ===============================================================================================
+[2026-09-05 18:52:41] [Evaluation] Loading weights for Baseline ViT (Uniform @ 224) from /home/anshu/deepak/ViT-Finetuning/checkpoints/best_baseline_model.pt ...
+[2026-09-05 18:53:05] [Evaluation] Loading weights for FOVI-ViT @ 64 (a=2.79, 1-fixation) from /home/anshu/deepak/ViT-Finetuning/checkpoints/best_fovi_model.pt ...
+[2026-09-05 18:53:25] [Evaluation] Loading weights for FOVI-ViT @ 64 (a=2.79, 3-fixations) from /home/anshu/deepak/ViT-Finetuning/checkpoints/best_fovi_model.pt ...
+[2026-09-05 18:53:44] 
+===============================================================================================
+[2026-09-05 18:53:44]                      ICML PAPER-MATCHED BENCHMARK COMPARISON MATRIX
+[2026-09-05 18:53:44] ===============================================================================================
+[2026-09-05 18:53:44] 
+| Model Architecture                  |   # Fixations | Test Top-1   | Test Top-5   | Total GFLOPs   | Latency (bs=1)   | Throughput   | Trainable Params   |
+|-------------------------------------|---------------|--------------|--------------|----------------|------------------|--------------|--------------------|
+| Baseline ViT (Uniform @ 224)        |             1 | 87.52%       | 97.74%       | 2.092 G        | 6.15 ms          | 162.6 FPS    | 314.4 k            |
+| FOVI-ViT @ 64 (a=2.79, 1-fixation)  |             1 | 49.10%       | 78.26%       | 0.674 G        | 7.51 ms          | 133.2 FPS    | 353.6 k            |
+| FOVI-ViT @ 64 (a=2.79, 3-fixations) |             3 | 49.10%       | 78.26%       | 2.023 G        | 24.75 ms         | 40.4 FPS     | 353.6 k            |
+
+[2026-09-05 18:53:44] ===============================================================================================
+[2026-09-05 18:53:44] 
+[Summary] Metrics saved to: /home/anshu/deepak/ViT-Finetuning/final_summary.json
+[2026-09-05 18:53:44] [Summary] Evaluation log saved to: /home/anshu/deepak/ViT-Finetuning/checkpoints/evaluation.log
+[2026-09-06 07:16:04] ===============================================================================================
+[2026-09-06 07:16:04]         FINAL EVALUATION ON HELD-OUT TEST SET (5,000 IMAGES - ICML PAPER PROTOCOL)
+[2026-09-06 07:16:04] Device: cuda (NVIDIA GeForce RTX 5060 Laptop GPU)
+[2026-09-06 07:16:04] Log File: /home/anshu/deepak/ViT-Finetuning/checkpoints/evaluation.log
+[2026-09-06 07:16:04] ===============================================================================================
+[2026-09-06 07:16:06] [Evaluation] Loading weights for Baseline ViT (Uniform @ 224) from /home/anshu/deepak/ViT-Finetuning/checkpoints/best_baseline_model.pt ...
+[2026-09-06 07:16:31] [Evaluation] Loading weights for FOVI-ViT @ 64 (a=2.79, 1-fixation) from /home/anshu/deepak/ViT-Finetuning/checkpoints/best_fovi_model.pt ...
+[2026-09-06 07:16:50] [Evaluation] Loading weights for FOVI-ViT @ 64 (a=2.79, 3-fixations) from /home/anshu/deepak/ViT-Finetuning/checkpoints/best_fovi_model.pt ...
+[2026-09-06 07:17:09] 
+===============================================================================================
+[2026-09-06 07:17:09]                      ICML PAPER-MATCHED BENCHMARK COMPARISON MATRIX
+[2026-09-06 07:17:09] ===============================================================================================
+[2026-09-06 07:17:09] 
+| Model Architecture                  |   # Fixations | Test Top-1   | Test Top-5   | Total GFLOPs   | Latency (bs=1)   | Throughput   | Trainable Params   |
+|-------------------------------------|---------------|--------------|--------------|----------------|------------------|--------------|--------------------|
+| Baseline ViT (Uniform @ 224)        |             1 | 88.50%       | 97.40%       | 2.092 G        | 6.94 ms          | 144.1 FPS    | 314.4 k            |
+| FOVI-ViT @ 64 (a=2.79, 1-fixation)  |             1 | 69.46%       | 90.20%       | 0.674 G        | 7.79 ms          | 128.3 FPS    | 353.6 k            |
+| FOVI-ViT @ 64 (a=2.79, 3-fixations) |             3 | 69.46%       | 90.20%       | 2.023 G        | 22.36 ms         | 44.7 FPS     | 353.6 k            |
+
+[2026-09-06 07:17:09] ===============================================================================================
+[2026-09-06 07:17:09] 
+[Summary] Metrics saved to: /home/anshu/deepak/ViT-Finetuning/final_summary.json
+[2026-09-06 07:17:09] [Summary] Evaluation log saved to: /home/anshu/deepak/ViT-Finetuning/checkpoints/evaluation.log

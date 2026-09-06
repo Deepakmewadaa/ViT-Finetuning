@@ -4,20 +4,14 @@ __pycache__/
 *$py.class
 
 # PyTorch Checkpoints & Models
-checkpoints/
-*.pt
 *.pth
 *.bin
 *.onnx
 
 # Data & Manifests
-dataset_splits.json
-final_summary.json
 flops_comparison.json
-*.png
 *.jpg
 *.jpeg
-*.log
 
 # Environments & IDEs
 .venv/

@@ -5,7 +5,7 @@ timm>=1.0.0
 peft>=0.10.0
 
 # Foveated Vision & Profiling
-fovi
+# fovi
 fvcore
 
 # Data & Utilities

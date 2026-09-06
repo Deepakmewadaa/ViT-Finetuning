@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Baseline ViT (Uniform @ 224)",
+    "model_type": "baseline",
+    "fixations": 1,
+    "test_top1": 88.5,
+    "test_top5": 97.39999999999999,
+    "test_loss": 0.4980209613800049,
+    "gflops": 2.091554304,
+    "latency_ms": 6.939643516540527,
+    "fps": 144.0996209123014,
+    "trainable_params_k": 314.404
+  },
+  {
+    "name": "FOVI-ViT @ 64 (a=2.79, 1-fixation)",
+    "model_type": "fovi",
+    "fixations": 1,
+    "test_top1": 69.46,
+    "test_top5": 90.2,
+    "test_loss": 1.132311530303955,
+    "gflops": 0.674469888,
+    "latency_ms": 7.7933222198486325,
+    "fps": 128.3149819537967,
+    "trainable_params_k": 353.572
+  },
+  {
+    "name": "FOVI-ViT @ 64 (a=2.79, 3-fixations)",
+    "model_type": "fovi",
+    "fixations": 3,
+    "test_top1": 69.46,
+    "test_top5": 90.2,
+    "test_loss": 1.132311530303955,
+    "gflops": 2.023409664,
+    "latency_ms": 22.362122926712036,
+    "fps": 44.718473432836674,
+    "trainable_params_k": 353.572
+  }
+]
